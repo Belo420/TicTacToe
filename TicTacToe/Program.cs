@@ -48,7 +48,7 @@
         static internal bool CheckForWinConditionRows(string[,] boardValues)
         {
             for (int i = 0; i < boardValues.GetLength(0); i++)
-                if (boardValues[i, 0] == boardValues[i, 1] || boardValues[i, 1] == boardValues[i, 2])
+                if (boardValues[i, 0] == boardValues[i, 1] && boardValues[i, 1] == boardValues[i, 2])
                 {
                     return true;
                 }
@@ -57,7 +57,7 @@
         static internal bool CheckForWinConditionColumn(string[,] boardValues)
         {
             for (int i = 0; i < boardValues.GetLength(0); i++)
-                if (boardValues[0, i] == boardValues[1, i] || boardValues[1, i] == boardValues[2, i])
+                if (boardValues[0, i] == boardValues[1, i] && boardValues[1, i] == boardValues[2, i])
                 {
                     return true;
                 }
@@ -65,11 +65,11 @@
         }
         static internal bool CheckForWinConditionDiagonal(string[,] boardValues)
         {
-            if (boardValues[0, 0] == boardValues[1, 1] || boardValues[1, 1] == boardValues[2, 2])
+            if (boardValues[0, 0] == boardValues[1, 1] && boardValues[1, 1] == boardValues[2, 2])
             {
                 return true;
             }
-            if (boardValues[2, 0] == boardValues[1, 1] || boardValues[1, 1] == boardValues[0, 2])
+            if (boardValues[2, 0] == boardValues[1, 1] && boardValues[1, 1] == boardValues[0, 2])
             {
                 return true;
             }
