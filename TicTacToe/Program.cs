@@ -40,13 +40,16 @@
         {
 
             Console.WriteLine("Podaj wartosc do zakreslenia");
-           // int choice = int.Parse(Console.ReadLine());
-            //if (choice < 4)
-            //    boardValues[0, choice - 1] = "O";
-            //if (choice < 7)
-            //    boardValues[1, choice - 1] = "O";
-            //if (choice < 10)
-            //    boardValues[2, choice - 1] = "O";
+            int choice = int.Parse(Console.ReadLine());
+            for (int i = 0; i < boardValues.GetLength(0); i++)
+                for (int j = 0; j < boardValues.GetLength(1); j++)
+                {
+                    if (boardValues[i, j] == choice.ToString())
+                    {
+                        boardValues[i, j] = "O";
+                    }
+
+                }
             DrawABoard(boardValues);
         }
         static internal bool CheckForWinCondition(string[,] boardValues)
