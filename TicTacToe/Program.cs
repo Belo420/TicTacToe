@@ -4,13 +4,13 @@
     {
         static void Main(string[] args)
         {
-            int[,] boardValues = new int[3, 3] { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+            string[,] boardValues = new string[3, 3] { { "1", "2", "3" }, { "4", "5", "6" }, { "7", "8", "9" } };
             DrawABoard(boardValues);
             ChoicePlayerA(boardValues);
             ChoicePlayerB(boardValues);
             CheckForWinCondition(boardValues);
         }//suma wartosci 
-        static internal void DrawABoard(int[,] boardValues)
+        static internal void DrawABoard(string[,] boardValues)
         {
             Console.WriteLine("-------------------");
             Console.WriteLine($" {boardValues[0,0]}    |  {boardValues[0,1]}     |  {boardValues[0,2]}   ");
@@ -20,7 +20,7 @@
             Console.WriteLine($" {boardValues[2,0]}    |  {boardValues[2,1]}     |  {boardValues[2,2]}   ");
             Console.WriteLine("-------------------");
         }
-        static internal void ChoicePlayerA(int[,] boardValues)
+        static internal void ChoicePlayerA(string[,] boardValues)
         {
 
             Console.WriteLine("Podaj wartosc do zakreslenia");
@@ -28,15 +28,15 @@
             for(int i = 0; i < boardValues.GetLength(0); i++)
                 for(int j = 0; j < boardValues.GetLength(1); j++)
                 {
-                    if (boardValues[i, j] == choice)
+                    if (boardValues[i, j] == choice.ToString())
                     {
-                        boardValues[i, j] = 'O';
+                        boardValues[i, j] = "X";
                     }
                     
                 }
             DrawABoard(boardValues);
         }
-        static internal void ChoicePlayerB(int[,] boardValues)
+        static internal void ChoicePlayerB(string[,] boardValues)
         {
 
             Console.WriteLine("Podaj wartosc do zakreslenia");
@@ -49,7 +49,7 @@
             //    boardValues[2, choice - 1] = "O";
             DrawABoard(boardValues);
         }
-        static internal bool CheckForWinCondition(int[,] boardValues)
+        static internal bool CheckForWinCondition(string[,] boardValues)
         {
             for (int i = 0; i < boardValues.Length; i++)
             {
