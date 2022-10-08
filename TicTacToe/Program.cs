@@ -4,6 +4,7 @@
     {
         static void Main(string[] args)
         {
+
             Game();
         }
         static internal void DrawABoard(string[,] boardValues)
@@ -18,8 +19,6 @@
         }
         static internal void ChoicePlayerA(string[,] boardValues)
         {
-
-            Console.WriteLine("Podaj wartosc do zakreslenia");
             int choice = int.Parse(Console.ReadLine());
             for (int i = 0; i < boardValues.GetLength(0); i++)
                 for (int j = 0; j < boardValues.GetLength(1); j++)
@@ -79,23 +78,38 @@
         static internal void Game()
         {
             string[,] boardValues = new string[3, 3] { { "1", "2", "3" }, { "4", "5", "6" }, { "7", "8", "9" } };
+            DrawABoard(boardValues);
             while (true)
             {
-                DrawABoard(boardValues);
                 Console.WriteLine("Gracz 1 wybiera: ");
                 ChoicePlayerA(boardValues);
+                if (CheckForWinConditionRows(boardValues) == true)
+                {
+                    Console.WriteLine("Wygrana przez rząd wierszy");
+                }
+                if (CheckForWinConditionDiagonal(boardValues) == true)
+                {
+                    Console.WriteLine("Wygrana przez przekątną");
+                }
+                if (CheckForWinConditionColumn(boardValues) == true)
+                {
+                    Console.WriteLine("Wygrana przez rząd kolumn");
+                }
                 Console.WriteLine("Gracz 2 wybiera: ");
                 ChoicePlayerB(boardValues);
-                CheckForWinConditionRows(boardValues);
-                CheckForWinConditionColumn(boardValues);
-                CheckForWinConditionDiagonal(boardValues);
-                
+                if (CheckForWinConditionRows(boardValues) == true)
+                {
+                    Console.WriteLine("Wygrana przez rząd wierszy");
+                }
+                if (CheckForWinConditionDiagonal(boardValues) == true)
+                {
+                    Console.WriteLine("Wygrana przez przekątną");
+                }
+                if (CheckForWinConditionColumn(boardValues) == true)
+                {
+                    Console.WriteLine("Wygrana przez rząd kolumn");
+                }
             }
-
-        }
-        static internal bool CheckForWin(string[,] boardValues)
-        {
-            return false;
         }
     }
 }
