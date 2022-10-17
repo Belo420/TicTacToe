@@ -4,7 +4,6 @@
     {
         static void Main(string[] args)
         {
-
             Game();
         }
         static internal void DrawABoard(string[,] boardValues)
