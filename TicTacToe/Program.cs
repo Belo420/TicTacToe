@@ -137,6 +137,7 @@ namespace TicTacToe
             {
                 Console.WriteLine("Remis.");
                 scores.pats++;
+                SaveToFile(scores);
                 return true;
             }
             return false;
@@ -144,105 +145,117 @@ namespace TicTacToe
         }
         static internal void Game()
         {
-            string[,] boardValues = new string[3, 3] { { "1", "2", "3" }, { "4", "5", "6" }, { "7", "8", "9" } };
-            DrawABoard(boardValues);
-            Console.WriteLine("Wybierz opcje \n1. Nowa gra \n2. Statystyki \n3. Exit");
-            string input = Console.ReadLine();
-            int menu;
-            if (!int.TryParse(input, out menu))
+            while (true)
             {
-                Console.WriteLine("Podaj liczbe a nie litere pacanie");
-            }
-            Scores scores = new Scores()
-            {
-                Player1 = new Player1(),
-                Player2 = new Player2()
-            };
-            if (!File.Exists(@"c:\Gry\scores.json")) //Avoiding of overwriting future data with zeros, creating stats file it id dont exists
-            {
-                SaveToFile(scores);
-            }
-            else
-            {
-                scores = ReadFromFile();
-            }
-            switch (menu)
-            {
-                case 1:
-                    {
-                        while (true)
+                string[,] boardValues = new string[3, 3] { { "1", "2", "3" }, { "4", "5", "6" }, { "7", "8", "9" } };
+                Console.WriteLine("Wybierz opcje \n1. Nowa gra \n2. Statystyki \n3. Exit");
+                string input = Console.ReadLine();
+                int menu;
+                if (!int.TryParse(input, out menu))
+                {
+                    Console.WriteLine("Podaj liczbe a nie litere pacanie");
+                }
+                Scores scores = new Scores()
+                {
+                    Player1 = new Player1(),
+                    Player2 = new Player2()
+                };
+                if (!File.Exists(@"c:\Gry\scores.json")) //Avoiding of overwriting future data with zeros, creating stats file it id dont exists
+                {
+                    SaveToFile(scores);
+                }
+                else
+                {
+                    scores = ReadFromFile();
+                }
+                switch (menu)
+                {
+                    case 1:
                         {
-                            Console.WriteLine("Gracz 1 wybiera: ");
-                            ChoicePlayerA(boardValues);
-                            if (CheckForWinConditionRows(boardValues) == true)
+                            while (true)
                             {
-                                Console.WriteLine("Wygrana przez rząd wierszy");
-                                scores.Player1.wins++;
-                                scores.Player2.loses++;
-                                SaveToFile(scores);
-                                break;
+                                Console.WriteLine("Gracz 1 wybiera: ");
+                                DrawABoard(boardValues);
+                                ChoicePlayerA(boardValues);
+                                if (CheckForWinConditionRows(boardValues) == true)
+                                {
+                                    Console.WriteLine("Wygrana przez rząd wierszy");
+                                    Console.WriteLine("Wygrał Gracz 1");
+                                    scores.Player1.wins++;
+                                    scores.Player2.loses++;
+                                    SaveToFile(scores);
+                                    break;
+                                }
+                                if (CheckForWinConditionDiagonal(boardValues) == true)
+                                {
+                                    Console.WriteLine("Wygrana przez przekątną");
+                                    Console.WriteLine("Wygrał Gracz 1");
+                                    scores.Player1.wins++;
+                                    scores.Player2.loses++;
+                                    SaveToFile(scores);
+                                    break;
+                                }
+                                if (CheckForWinConditionColumn(boardValues) == true)
+                                {
+                                    Console.WriteLine("Wygrana przez rząd kolumn");
+                                    Console.WriteLine("Wygrał Gracz 1");
+                                    scores.Player1.wins++;
+                                    scores.Player2.loses++;
+                                    SaveToFile(scores);
+                                    break;
+                                }
+                                if (CheckForPat(boardValues, scores) == true)
+                                {
+                                    break;
+                                }
+                                Console.WriteLine("Gracz 2 wybiera: ");
+                                ChoicePlayerB(boardValues);
+                                if (CheckForWinConditionRows(boardValues) == true)
+                                {
+                                    Console.WriteLine("Wygrana przez rząd wierszy");
+                                    Console.WriteLine("Wygrał Gracz 2");
+                                    scores.Player2.wins++;
+                                    scores.Player1.loses++;
+                                    SaveToFile(scores);
+                                    break;
+                                }
+                                if (CheckForWinConditionDiagonal(boardValues) == true)
+                                {
+                                    Console.WriteLine("Wygrana przez przekątną");
+                                    Console.WriteLine("Wygrał Gracz 2");
+                                    scores.Player2.wins++;
+                                    scores.Player1.loses++;
+                                    SaveToFile(scores);
+                                    break;
+                                }
+                                if (CheckForWinConditionColumn(boardValues) == true)
+                                {
+                                    Console.WriteLine("Wygrana przez rząd kolumn");
+                                    Console.WriteLine("Wygrał Gracz 2");
+                                    scores.Player2.wins++;
+                                    scores.Player1.loses++;
+                                    SaveToFile(scores);
+                                    break;
+                                }
+                                if (CheckForPat(boardValues, scores) == true)
+                                {
+                                    break;
+                                }
                             }
-                            if (CheckForWinConditionDiagonal(boardValues) == true)
-                            {
-                                Console.WriteLine("Wygrana przez przekątną");
-                                scores.Player1.wins++;
-                                scores.Player2.loses++;
-                                SaveToFile(scores);
-                                break;
-                            }
-                            if (CheckForWinConditionColumn(boardValues) == true)
-                            {
-                                Console.WriteLine("Wygrana przez rząd kolumn");
-                                scores.Player1.wins++;
-                                scores.Player2.loses++;
-                                SaveToFile(scores);
-                                break;
-                            }
-                            if (CheckForPat(boardValues, scores) == true)
-                            {
-                                break;
-                            }
-                            Console.WriteLine("Gracz 2 wybiera: ");
-                            ChoicePlayerB(boardValues);
-                            if (CheckForWinConditionRows(boardValues) == true)
-                            {
-                                Console.WriteLine("Wygrana przez rząd wierszy");
-                                scores.Player2.wins++;
-                                scores.Player1.loses++;
-                                SaveToFile(scores);
-                                break;
-                            }
-                            if (CheckForWinConditionDiagonal(boardValues) == true)
-                            {
-                                Console.WriteLine("Wygrana przez przekątną");
-                                scores.Player2.wins++;
-                                scores.Player1.loses++;
-                                SaveToFile(scores);
-                                break;
-                            }
-                            if (CheckForWinConditionColumn(boardValues) == true)
-                            {
-                                Console.WriteLine("Wygrana przez rząd kolumn");
-                                scores.Player2.wins++;
-                                scores.Player1.loses++;
-                                SaveToFile(scores);
-                                break;
-                            }
-                            if(CheckForPat(boardValues, scores) == true)
-                            {
-                                break;
-                            }
+                            break;
                         }
-
-                        break;
-                    }
-                case 2:
-                    {
-                        ShowStats(scores);
-                        break;
-                    }
+                    case 2:
+                        {
+                            ShowStats(scores);
+                            break;
+                        }
+                    case 3:
+                        {
+                            Environment.Exit(0);
+                            break;
+                        }
+                }
             }
-
         }
     }
 }
