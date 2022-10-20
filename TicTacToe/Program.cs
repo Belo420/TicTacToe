@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace TicTacToe
@@ -102,17 +103,17 @@ namespace TicTacToe
             }
             return false;
         }
-        static internal void SaveToFile(Scores scores)
+        static internal void SaveToFile(Scores scores, string path)
         {
-            using (StreamWriter file = File.CreateText(@"c:\Gry\scores.json"))
+            using (StreamWriter file = File.CreateText(path + @"\scores.json"))
             {
                 JsonSerializer serializer = new JsonSerializer();
                 serializer.Serialize(file, scores);
             }
         }
-        static internal Scores ReadFromFile()
+        static internal Scores ReadFromFile(string path)
         {
-            using (StreamReader file = File.OpenText(@"c:\Gry\scores.json"))
+            using (StreamReader file = File.OpenText(path + @"\scores.json"))
             {
                 JsonSerializer serializer = new JsonSerializer();
                 Scores scores = (Scores)serializer.Deserialize(file, typeof(Scores));
@@ -125,7 +126,7 @@ namespace TicTacToe
             Console.WriteLine($"Wygrane Gracza drugiego: {scores.Player2.wins}\nPrzegrane Gracza drugiego: {scores.Player2.loses}");
             Console.WriteLine($"Remisy: {scores.pats}");
         }
-        static internal bool CheckForPat(string[,] boardValues, Scores scores)
+        static internal bool CheckForPat(string[,] boardValues, Scores scores, string path)
         {
             string arrayString = string.Empty;
             Regex regex = new Regex(@"[0-9]");
@@ -137,7 +138,7 @@ namespace TicTacToe
             {
                 Console.WriteLine("Remis.");
                 scores.pats++;
-                SaveToFile(scores);
+                SaveToFile(scores, path);
                 return true;
             }
             return false;
@@ -145,8 +146,10 @@ namespace TicTacToe
         }
         static internal void Game()
         {
+            string path = Directory.GetCurrentDirectory();
             while (true)
             {
+                
                 string[,] boardValues = new string[3, 3] { { "1", "2", "3" }, { "4", "5", "6" }, { "7", "8", "9" } };
                 Console.WriteLine("Wybierz opcje \n1. Nowa gra \n2. Statystyki \n3. Exit");
                 string input = Console.ReadLine();
@@ -160,13 +163,14 @@ namespace TicTacToe
                     Player1 = new Player1(),
                     Player2 = new Player2()
                 };
-                if (!File.Exists(@"c:\Gry\scores.json")) //Avoiding of overwriting future data with zeros, creating stats file it id dont exists
+                
+                if (!File.Exists(path + @"\scores.json")) //Avoiding of overwriting future data with zeros, creating stats file it id dont exists
                 {
-                    SaveToFile(scores);
+                    SaveToFile(scores, path);
                 }
                 else
                 {
-                    scores = ReadFromFile();
+                    scores = ReadFromFile(path);
                 }
                 switch (menu)
                 {
@@ -183,7 +187,7 @@ namespace TicTacToe
                                     Console.WriteLine("Wygrał Gracz 1");
                                     scores.Player1.wins++;
                                     scores.Player2.loses++;
-                                    SaveToFile(scores);
+                                    SaveToFile(scores, path);
                                     break;
                                 }
                                 if (CheckForWinConditionDiagonal(boardValues) == true)
@@ -192,7 +196,7 @@ namespace TicTacToe
                                     Console.WriteLine("Wygrał Gracz 1");
                                     scores.Player1.wins++;
                                     scores.Player2.loses++;
-                                    SaveToFile(scores);
+                                    SaveToFile(scores, path);
                                     break;
                                 }
                                 if (CheckForWinConditionColumn(boardValues) == true)
@@ -201,10 +205,10 @@ namespace TicTacToe
                                     Console.WriteLine("Wygrał Gracz 1");
                                     scores.Player1.wins++;
                                     scores.Player2.loses++;
-                                    SaveToFile(scores);
+                                    SaveToFile(scores, path);
                                     break;
                                 }
-                                if (CheckForPat(boardValues, scores) == true)
+                                if (CheckForPat(boardValues, scores, path) == true)
                                 {
                                     break;
                                 }
@@ -216,7 +220,7 @@ namespace TicTacToe
                                     Console.WriteLine("Wygrał Gracz 2");
                                     scores.Player2.wins++;
                                     scores.Player1.loses++;
-                                    SaveToFile(scores);
+                                    SaveToFile(scores, path);
                                     break;
                                 }
                                 if (CheckForWinConditionDiagonal(boardValues) == true)
@@ -225,7 +229,7 @@ namespace TicTacToe
                                     Console.WriteLine("Wygrał Gracz 2");
                                     scores.Player2.wins++;
                                     scores.Player1.loses++;
-                                    SaveToFile(scores);
+                                    SaveToFile(scores, path);
                                     break;
                                 }
                                 if (CheckForWinConditionColumn(boardValues) == true)
@@ -234,10 +238,10 @@ namespace TicTacToe
                                     Console.WriteLine("Wygrał Gracz 2");
                                     scores.Player2.wins++;
                                     scores.Player1.loses++;
-                                    SaveToFile(scores);
+                                    SaveToFile(scores, path);
                                     break;
                                 }
-                                if (CheckForPat(boardValues, scores) == true)
+                                if (CheckForPat(boardValues, scores, path) == true)
                                 {
                                     break;
                                 }
