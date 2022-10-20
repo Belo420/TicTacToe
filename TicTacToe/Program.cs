@@ -41,7 +41,7 @@ namespace TicTacToe
             }
             else
             {
-                Console.WriteLine("Wybrales wartosc z poza zakresu. Za kare tracisz ruch baranie");
+                Console.WriteLine("Wybrales wartosc z poza zakresu. Za kare tracisz ruch");
             }
             DrawABoard(boardValues);
         }
@@ -51,7 +51,7 @@ namespace TicTacToe
             int choice;
             if (!int.TryParse(input, out choice))
             {
-                Console.WriteLine("Podaj liczbe a nie litere pacanie");
+                Console.WriteLine("Podaj liczbe a nie litere");
             }
             if (choice >= 1 && choice <= 9)
             {
@@ -67,7 +67,7 @@ namespace TicTacToe
             }
             else
             {
-                Console.WriteLine("Wybrales wartosc z poza zakresu. Za kare tracisz ruch baranie");
+                Console.WriteLine("Wybrales wartosc z poza zakresu. Za kare tracisz ruch");
             }
 
             DrawABoard(boardValues);
@@ -153,7 +153,7 @@ namespace TicTacToe
                 int menu;
                 if (!int.TryParse(input, out menu))
                 {
-                    Console.WriteLine("Podaj liczbe a nie litere pacanie");
+                    Console.WriteLine("Podaj liczbe a nie litere");
                 }
                 Scores scores = new Scores()
                 {
