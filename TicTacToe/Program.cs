@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace TicTacToe
 {
@@ -20,30 +21,55 @@ namespace TicTacToe
         }
         static internal void ChoicePlayerA(string[,] boardValues)
         {
-            int choice = int.Parse(Console.ReadLine());
-            for (int i = 0; i < boardValues.GetLength(0); i++)
-                for (int j = 0; j < boardValues.GetLength(1); j++)
-                {
-                    if (boardValues[i, j] == choice.ToString())
-                    {
-                        boardValues[i, j] = "X";
-                    }
+            string input = Console.ReadLine();
+            int choice;
+            if(!int.TryParse(input, out choice))
+            {
+                Console.WriteLine("Podaj liczbe a nie litere pacanie");
+            }
 
-                }
+            if (choice >= 1 && choice <= 9)
+            {
+                for (int i = 0; i < boardValues.GetLength(0); i++)
+                    for (int j = 0; j < boardValues.GetLength(1); j++)
+                    {
+                        if (boardValues[i, j] == choice.ToString())
+                        {
+                            boardValues[i, j] = "X";
+                        }
+                    }
+            }
+            else
+            {
+                Console.WriteLine("Wybrales wartosc z poza zakresu. Za kare tracisz ruch baranie");
+            }
             DrawABoard(boardValues);
         }
         static internal void ChoicePlayerB(string[,] boardValues)
         {
-            int choice = int.Parse(Console.ReadLine());
-            for (int i = 0; i < boardValues.GetLength(0); i++)
-                for (int j = 0; j < boardValues.GetLength(1); j++)
-                {
-                    if (boardValues[i, j] == choice.ToString())
+            string input = Console.ReadLine();
+            int choice;
+            if (!int.TryParse(input, out choice))
+            {
+                Console.WriteLine("Podaj liczbe a nie litere pacanie");
+            }
+            if (choice >= 1 && choice <= 9)
+            {
+                for (int i = 0; i < boardValues.GetLength(0); i++)
+                    for (int j = 0; j < boardValues.GetLength(1); j++)
                     {
-                        boardValues[i, j] = "O";
-                    }
+                        if (boardValues[i, j] == choice.ToString())
+                        {
+                            boardValues[i, j] = "O";
+                        }
 
-                }
+                    }
+            }
+            else
+            {
+                Console.WriteLine("Wybrales wartosc z poza zakresu. Za kare tracisz ruch baranie");
+            }
+
             DrawABoard(boardValues);
         }
         static internal bool CheckForWinConditionRows(string[,] boardValues)
@@ -93,16 +119,44 @@ namespace TicTacToe
                 return scores;
             }
         }
+        static internal void ShowStats(Scores scores)
+        {
+            Console.WriteLine($"Statystyki: \nWygrane Gracza pierwszego: {scores.Player1.wins}\nPrzegrane Gracza pierwszego: {scores.Player1.loses}");
+            Console.WriteLine($"Wygrane Gracza drugiego: {scores.Player2.wins}\nPrzegrane Gracza drugiego: {scores.Player2.loses}");
+            Console.WriteLine($"Remisy: {scores.pats}");
+        }
+        static internal bool CheckForPat(string[,] boardValues, Scores scores)
+        {
+            string arrayString = string.Empty;
+            Regex regex = new Regex(@"[0-9]");
+            foreach (string boardValue in boardValues)
+            {
+                arrayString += boardValue;
+            }
+            if(regex.IsMatch(arrayString) == false)
+            {
+                Console.WriteLine("Remis.");
+                scores.pats++;
+                return true;
+            }
+            return false;
+                    
+        }
         static internal void Game()
         {
             string[,] boardValues = new string[3, 3] { { "1", "2", "3" }, { "4", "5", "6" }, { "7", "8", "9" } };
             DrawABoard(boardValues);
             Console.WriteLine("Wybierz opcje \n1. Nowa gra \n2. Statystyki \n3. Exit");
-            int menu = int.Parse(Console.ReadLine());
+            string input = Console.ReadLine();
+            int menu;
+            if (!int.TryParse(input, out menu))
+            {
+                Console.WriteLine("Podaj liczbe a nie litere pacanie");
+            }
             Scores scores = new Scores()
             {
                 Player1 = new Player1(),
-                Player2 = new Player2() 
+                Player2 = new Player2()
             };
             if (!File.Exists(@"c:\Gry\scores.json")) //Avoiding of overwriting future data with zeros, creating stats file it id dont exists
             {
@@ -110,9 +164,8 @@ namespace TicTacToe
             }
             else
             {
-              scores = ReadFromFile();
+                scores = ReadFromFile();
             }
-            
             switch (menu)
             {
                 case 1:
@@ -145,6 +198,10 @@ namespace TicTacToe
                                 SaveToFile(scores);
                                 break;
                             }
+                            if (CheckForPat(boardValues, scores) == true)
+                            {
+                                break;
+                            }
                             Console.WriteLine("Gracz 2 wybiera: ");
                             ChoicePlayerB(boardValues);
                             if (CheckForWinConditionRows(boardValues) == true)
@@ -171,12 +228,21 @@ namespace TicTacToe
                                 SaveToFile(scores);
                                 break;
                             }
+                            if(CheckForPat(boardValues, scores) == true)
+                            {
+                                break;
+                            }
                         }
-                        
+
+                        break;
+                    }
+                case 2:
+                    {
+                        ShowStats(scores);
                         break;
                     }
             }
-           
+
         }
     }
 }
