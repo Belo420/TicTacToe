@@ -13,9 +13,9 @@ namespace TicTacToe
     }
 
     public class Player2
-    {
-        public int loses { get; set; }
+    {    
         public int wins { get; set; }
+        public int loses { get; set; }
     }
 
     public class Scores

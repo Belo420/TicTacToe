@@ -76,6 +76,23 @@ namespace TicTacToe
             }
             return false;
         }
+        static internal void SaveToFile(Scores scores)
+        {
+            using (StreamWriter file = File.CreateText(@"c:\Gry\scores.json"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Serialize(file, scores);
+            }
+        }
+        static internal Scores ReadFromFile()
+        {
+            using (StreamReader file = File.OpenText(@"c:\Gry\scores.json"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                Scores scores = (Scores)serializer.Deserialize(file, typeof(Scores));
+                return scores;
+            }
+        }
         static internal void Game()
         {
             string[,] boardValues = new string[3, 3] { { "1", "2", "3" }, { "4", "5", "6" }, { "7", "8", "9" } };
@@ -87,12 +104,15 @@ namespace TicTacToe
                 Player1 = new Player1(),
                 Player2 = new Player2() 
             };
-            using (StreamWriter file = File.CreateText(@"c:\Gry\scores.json"))
+            if (!File.Exists(@"c:\Gry\scores.json")) //Avoiding of overwriting future data with zeros, creating stats file it id dont exists
             {
-                JsonSerializer serializer = new JsonSerializer();
-                serializer.Serialize(file, scores);
+                SaveToFile(scores);
             }
-           
+            else
+            {
+              scores = ReadFromFile();
+            }
+            
             switch (menu)
             {
                 case 1:
@@ -104,16 +124,25 @@ namespace TicTacToe
                             if (CheckForWinConditionRows(boardValues) == true)
                             {
                                 Console.WriteLine("Wygrana przez rząd wierszy");
+                                scores.Player1.wins++;
+                                scores.Player2.loses++;
+                                SaveToFile(scores);
                                 break;
                             }
                             if (CheckForWinConditionDiagonal(boardValues) == true)
                             {
                                 Console.WriteLine("Wygrana przez przekątną");
+                                scores.Player1.wins++;
+                                scores.Player2.loses++;
+                                SaveToFile(scores);
                                 break;
                             }
                             if (CheckForWinConditionColumn(boardValues) == true)
                             {
                                 Console.WriteLine("Wygrana przez rząd kolumn");
+                                scores.Player1.wins++;
+                                scores.Player2.loses++;
+                                SaveToFile(scores);
                                 break;
                             }
                             Console.WriteLine("Gracz 2 wybiera: ");
@@ -121,19 +150,29 @@ namespace TicTacToe
                             if (CheckForWinConditionRows(boardValues) == true)
                             {
                                 Console.WriteLine("Wygrana przez rząd wierszy");
+                                scores.Player2.wins++;
+                                scores.Player1.loses++;
+                                SaveToFile(scores);
                                 break;
                             }
                             if (CheckForWinConditionDiagonal(boardValues) == true)
                             {
                                 Console.WriteLine("Wygrana przez przekątną");
+                                scores.Player2.wins++;
+                                scores.Player1.loses++;
+                                SaveToFile(scores);
                                 break;
                             }
                             if (CheckForWinConditionColumn(boardValues) == true)
                             {
                                 Console.WriteLine("Wygrana przez rząd kolumn");
+                                scores.Player2.wins++;
+                                scores.Player1.loses++;
+                                SaveToFile(scores);
                                 break;
                             }
                         }
+                        
                         break;
                     }
             }
