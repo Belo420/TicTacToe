@@ -26,7 +26,7 @@ namespace TicTacToe
             int choice;
             if(!int.TryParse(input, out choice))
             {
-                Console.WriteLine("Podaj liczbe a nie litere pacanie");
+                Console.WriteLine("Podaj liczbe a nie litere");
             }
 
             if (choice >= 1 && choice <= 9)
